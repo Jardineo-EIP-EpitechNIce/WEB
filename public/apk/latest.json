@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "file": "1.0.0.apk",
+  "releaseDate": "2026-01-22",
+  "changelog": [
+    "Initial release",
+    "Garden plot management",
+    "Plant catalog with AR preview",
+    "Community feed"
+  ]
+}

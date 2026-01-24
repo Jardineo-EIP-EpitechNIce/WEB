@@ -1,18 +1,16 @@
 {
-  "version": "1.0",
-  "file": "Jardineo-v1.0.apk",
+  "version": "1.2.0",
+  "file": "Jardineo-v1.2.0.apk",
   "releaseDate": "2026-01-24",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.0/Jardineo-v1.0.apk",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.2.0/Jardineo-v1.2.0.apk",
   "changelog": [
     "**Backend**: v1.2.0",
     "**Frontend Mobile**: v1.2.0",
     "**Database**: v1.0",
-    "feat: rename APK to Jardineo-vX.Y.Z.apk format (frcjules)",
-    "fix(ci): reorganize workflow to avoid git checkout conflict (frcjules)",
-    "chore: update submodules for release v1.2.0 (GitHub Actions Bot)",
-    "fix(ci): fix changelog parsing and detached HEAD push issue (frcjules)",
-    "fix(ci): escape downloadUrl construction properly (frcjules)",
-    "fix(ci): store only metadata in WEB, not APK files (frcjules)",
-    "fix(ci): checkout main branch before committing in WEB submodule (frcjules)"
+    "Amélioration synchronisation automatique",
+    "Correction URL téléchargement APK",
+    "Volume Docker pour latest.json dynamique",
+    "Backend stable",
+    "Scripts de population MongoDB"
   ]
 }

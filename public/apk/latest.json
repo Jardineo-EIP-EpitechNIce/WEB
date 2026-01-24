@@ -1,13 +1,16 @@
 {
-  "version": "1.1.0",
-  "file": "1.1.0.apk",
+  "version": "1.2.0",
+  "file": "1.2.0.apk",
   "releaseDate": "2026-01-24",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.1.0/1.1.0.apk",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.2.0/1.2.0.apk",
   "changelog": [
-    "Synchronisation automatique des métadonnées vers le portail web",
-    "APK stocké uniquement sur GitHub Releases (pas de limite de taille)",
-    "GitHub Actions met à jour latest.json automatiquement",
-    "n8n récupère et déploie l'APK sur le serveur",
-    "Portail web lit les métadonnées depuis latest.json"
+    "**Backend**: v1.2.0",
+    "**Frontend Mobile**: v1.2.0",
+    "**Database**: v1.0",
+    "Amélioration synchronisation automatique",
+    "Correction URL téléchargement APK",
+    "Volume Docker pour latest.json dynamique",
+    "Backend stable",
+    "Scripts de population MongoDB"
   ]
 }

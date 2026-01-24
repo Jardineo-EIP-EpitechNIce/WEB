@@ -1,7 +1,5 @@
 # Docker Compose configuration for Jardineo Web Portal
-# Usage: docker-compose up
-
-version: '3.8'
+# Usage: docker compose up
 
 services:
   jardineo-web:
@@ -12,15 +10,17 @@ services:
         NODE_ENV: production
     container_name: jardineo-web
     ports:
-      - "${PORT:-3000}:3000"
+      - "3001:3000"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
     networks:
       - jardineo-network
+    volumes:
+      - ./public/apk:/app/public/apk
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3

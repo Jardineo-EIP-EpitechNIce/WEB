@@ -113,27 +113,6 @@ The website automatically reads `latest.json` to display the current version.
 - APK filename must match version: `1.2.3.apk`
 - Keep only 2-3 recent versions to save space
 
-## 🍏 iOS TestFlight Configuration
-
-Update the TestFlight URL in two locations:
-
-1. **`lib/platform.ts`**
-   ```typescript
-   case 'ios':
-     return 'https://testflight.apple.com/join/YOUR_CODE';
-   ```
-
-2. **`components/DownloadButton.tsx`**
-   ```typescript
-   window.open('https://testflight.apple.com/join/YOUR_CODE', '_blank');
-   ```
-
-Or use environment variable:
-
-```env
-NEXT_PUBLIC_TESTFLIGHT_URL=https://testflight.apple.com/join/YOUR_CODE
-```
-
 ## 🎨 Design System
 
 The portal follows Jardineo's design direction:
@@ -212,7 +191,7 @@ Create `.env.local`:
 
 ```env
 NODE_ENV=development
-NEXT_PUBLIC_TESTFLIGHT_URL=https://testflight.apple.com/join/YOUR_CODE
+TESTFLIGHT_CODE=YOUR_CODE
 ```
 
 ### Build Modes
@@ -282,8 +261,6 @@ This project is part of the Jardineo EIP monorepo.
 [FIX] Fix bug
 [VERSIONNING] Version update
 ```
-
-**Note**: Do not include Claude Code tags in commits.
 
 ## 📄 License
 

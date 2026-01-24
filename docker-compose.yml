@@ -10,9 +10,10 @@ services:
         NODE_ENV: production
     container_name: jardineo-web
     ports:
-      - "3001:3000"
+      - "${WEB_PORT:-3000}:3000"
     environment:
-      - NODE_ENV=production
+      - TESTFLIGHT_CODE=${TESTFLIGHT_CODE}
+      - NODE_ENV=${NODE_ENV:-production}
       - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
     networks:

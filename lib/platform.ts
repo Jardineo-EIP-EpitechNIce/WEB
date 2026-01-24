@@ -44,7 +44,7 @@ export function getPlatformDownloadUrl(platform: Platform, apkVersion?: string):
       return apkVersion ? `/apk/${apkVersion}.apk` : '/apk/latest.json';
     case 'ios':
       // Replace with your actual TestFlight public link
-      return 'https://testflight.apple.com/join/YOUR_TESTFLIGHT_CODE';
+      return `https://testflight.apple.com/join/${process.env.TESTFLIGHT_CODE || 'TESTFLIGHT_CODE'}`;
     default:
       return '#';
   }

@@ -1,0 +1,597 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=cat {{ $('Extraire données release').item.json.server_apk_dir }}/latest.json",
+        "cwd": "={{ $('Extraire données release').item.json.server_web_dir }}"
+      },
+      "id": "70279d4d-bc2a-4448-8de0-bb178e37d84f",
+      "name": "📖 Lire latest.json",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3328,
+        -1872
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "version",
+              "value": "={{ JSON.parse($json.stdout).version }}",
+              "type": "string",
+              "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            },
+            {
+              "name": "apk_filename",
+              "value": "={{ JSON.parse($json.stdout).file }}",
+              "type": "string",
+              "id": "b2c3d4e5-f678-90ab-cdef-123456789012"
+            },
+            {
+              "name": "apk_url",
+              "value": "={{ JSON.parse($json.stdout).downloadUrl }}",
+              "type": "string",
+              "id": "c3d4e5f6-7890-abcd-ef12-34567890abcd"
+            },
+            {
+              "name": "release_date",
+              "value": "={{ JSON.parse($json.stdout).releaseDate }}",
+              "type": "string",
+              "id": "d4e5f678-90ab-cdef-1234-567890abcdef"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3c389d6d-e51b-43d2-8ff1-d1ea403f2d0a",
+      "name": "🔍 Parser latest.json",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3168,
+        -1872
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": "✅ SUCCESS",
+              "type": "string",
+              "id": "status-id-001"
+            },
+            {
+              "name": "version",
+              "value": "={{ $('🔍 Parser latest.json').item.json.version }}",
+              "type": "string",
+              "id": "version-id-002"
+            },
+            {
+              "name": "message",
+              "value": "=Web portal updated with version {{ $('🔍 Parser latest.json').item.json.version }}",
+              "type": "string",
+              "id": "message-id-003"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now }}",
+              "type": "string",
+              "id": "timestamp-id-004"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0daf55c6-2dc7-4c1f-8d1f-fb34d3fdb4be",
+      "name": "✅ Succès",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2576,
+        -1872
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $('Extraire données release').item.json.server_web_dir }}\"\nVERSION=\"{{ $('🔍 Parser latest.json').item.json.version }}\"\nPROJECT_ID=\"{{ $('Extraire données release').item.json.projectid }}\"\nTOKEN=\"{{ $('Extraire données release').item.json.token }}\"\n\necho \"🔄 Rechargement du serveur Web avec Infisical...\"\n\ncd \"$WEB_DIR\"\n\nif [ -f \"docker-compose.yml\" ]; then\n  echo \"🐳 Arrêt et rebuild avec Infisical...\"\n  \n  # Arrêter les containers existants\n  RUNNING_CONTAINERS=$(docker ps --filter \"name=jardineo-web\" --format \"{{ .Names }}\" 2>/dev/null)\n  [ -z \"$RUNNING_CONTAINERS\" ] || docker compose down\n  \n  # Build et démarrage avec variables Infisical\n  infisical run \\\n    --path=/WEB \\\n    --domain=\"https://infisical.jules-francois.fr/api\" \\\n    --env=prod \\\n    --projectId=\"$PROJECT_ID\" \\\n    --token=\"$TOKEN\" \\\n    -- \\\n  bash -c 'docker compose -f docker-compose.yml build --no-cache && docker compose -f docker-compose.yml up -d && docker compose -f docker-compose.yml ps'\n\n  echo \"⏳ Attente du démarrage...\"\n  sleep 5\n\n  # Récupérer le healthcheck\n  HEALTH=$(docker inspect jardineo-web 2>/dev/null \\\n    | grep '\"Status\"' \\\n    | head -n 1 \\\n    | sed 's/.*\"Status\": \"\\(.*\\)\".*/\\1/')\n\n  HEALTH=${HEALTH:-unknown}\n  echo \"🏥 Healthcheck: $HEALTH\"\n\n  if [ \"$HEALTH\" = \"healthy\" ] || [ \"$HEALTH\" = \"unknown\" ]; then\n    echo \"✅ Serveur web redémarré avec succès!\"\n  else\n    echo \"⚠️ Le container a redémarré mais le healthcheck n'est pas encore OK\"\n  fi\nelse\n  echo \"⚠️ docker-compose.yml introuvable, pas de redémarrage possible\"\nfi\n\necho \"\"\necho \"🎉 Synchronisation Web terminée pour v$VERSION!\"\necho \"📍 Portail: http://192.168.1.127:3001\"\n",
+        "cwd": "={{ $('Extraire données release').item.json.server_web_dir }}"
+      },
+      "id": "c2bdd57d-5e6b-4ee8-a4e2-8a519c51282e",
+      "name": "🔄 Redémarrer serveur Web",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2784,
+        -1872
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nAPK_URL=\"{{ $('🔍 Parser latest.json').item.json.apk_url }}\"\nAPK_FILENAME=\"{{ $('🔍 Parser latest.json').item.json.apk_filename }}\"\nVERSION=\"{{ $('🔍 Parser latest.json').item.json.version }}\"\nAPK_DIR=\"{{ $('Extraire données release').item.json.server_apk_dir }}\"\n\necho \"📥 Téléchargement de l'APK depuis GitHub Releases...\"\necho \"   URL: $APK_URL\"\necho \"   Fichier: $APK_FILENAME\"\necho \"   Version: $VERSION\"\necho \"   Destination: $APK_DIR/$APK_FILENAME\"\necho \"\"\n\nmkdir -p \"$APK_DIR\"\n\n# Télécharger l'APK avec curl\ncurl -L \"$APK_URL\" \\\n  -o \"$APK_DIR/$APK_FILENAME\" \\\n  --progress-bar \\\n  -H \"Accept: application/octet-stream\"\n\nif [ $? -eq 0 ]; then\n  APK_SIZE=$(du -h \"$APK_DIR/$APK_FILENAME\" | cut -f1)\n  echo \"\"\n  echo \"✅ APK téléchargé avec succès!\"\n  echo \"📦 Taille: $APK_SIZE\"\n  echo \"📍 Fichier: $APK_DIR/$APK_FILENAME\"\n\n  # Vérifier que latest.json existe (sans jq)\n  if [ -f \"$APK_DIR/latest.json\" ]; then\n    echo \"✅ latest.json trouvé :\"\n    cat \"$APK_DIR/latest.json\"\n  else\n    echo \"⚠️ latest.json introuvable\"\n  fi\nelse\n  echo \"❌ Échec du téléchargement de l'APK\"\n  exit 1\nfi",
+        "cwd": "={{ $('Extraire données release').item.json.server_web_dir }}"
+      },
+      "id": "bce14cf3-a4e3-477e-bc68-50f38c5dec10",
+      "name": "📦 Télécharger APK sur serveur",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -2992,
+        -1872
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $json.server_web_dir }}\"\n\necho \"🔄 Pull du repo WEB pour récupérer latest.json...\"\n\ncd \"$WEB_DIR\"\ngit fetch origin\ngit reset --hard origin/main\n\necho \"✅ Repo WEB mis à jour\"\necho \"📋 latest.json actuel:\"\n\nif [ -f \"public/apk/latest.json\" ]; then\n  cat public/apk/latest.json\nelse\n  echo \"⚠️ public/apk/latest.json introuvable\"\nfi",
+        "cwd": "={{ $json.server_web_dir }}"
+      },
+      "id": "a8f3e22c-44f8-4257-b057-0be32cfec4c1",
+      "name": "📥 Git Pull WEB",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3504,
+        -1872
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "server_web_dir",
+              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB",
+              "type": "string",
+              "id": "ac12433d-96f9-42ec-8025-b3e32f13274e"
+            },
+            {
+              "name": "server_apk_dir",
+              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB/public/apk",
+              "type": "string",
+              "id": "afcfa32c-8d95-4699-bbc7-e76a8105fabd"
+            },
+            {
+              "id": "9f557398-1c2e-47e3-a7be-56d521098b60",
+              "name": "token",
+              "value": "st.64eddbce-3f9b-48ac-b129-cd2ebd1b7a50.f4021f481ed88a923da904c4ec66eb9a.0909aab5ef118e87c777092c48270f2b",
+              "type": "string"
+            },
+            {
+              "id": "846aab63-ad87-4682-9a47-cd2082b09914",
+              "name": "projectid",
+              "value": "9aed4b39-2df7-41bc-bbd5-f61be5c21306",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1d181c2e-a02d-4939-9493-366c38f01b9c",
+      "name": "Extraire données release",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3728,
+        -1872
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.head_commit.modified }}",
+              "operation": "contains",
+              "value2": "=public/apk/latest.json"
+            },
+            {
+              "value1": "={{ $json.body.ref }}",
+              "value2": "refs/heads/main"
+            }
+          ]
+        }
+      },
+      "id": "62da2927-01bc-4a67-a6cc-5af1a25d9a0b",
+      "name": "Filtrer releases stables uniquement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -3936,
+        -1872
+      ]
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "Jardineo-EIP-EpitechNIce",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "https://github.com/Jardineo-EIP-EpitechNIce/WEB",
+          "mode": "url"
+        },
+        "events": [
+          "push"
+        ],
+        "options": {}
+      },
+      "id": "c10bb9be-3e63-4cdf-8972-88ef28322a50",
+      "name": "GitHub Release Trigger1",
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4176,
+        -1872
+      ],
+      "webhookId": "jardineo-release-sync",
+      "credentials": {
+        "githubApi": {
+          "id": "hzcN0gQ2n6A80jln",
+          "name": "Jardineo"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "📖 Lire latest.json": {
+      "main": [
+        [
+          {
+            "node": "🔍 Parser latest.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Parser latest.json": {
+      "main": [
+        [
+          {
+            "node": "📦 Télécharger APK sur serveur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔄 Redémarrer serveur Web": {
+      "main": [
+        [
+          {
+            "node": "✅ Succès",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📦 Télécharger APK sur serveur": {
+      "main": [
+        [
+          {
+            "node": "🔄 Redémarrer serveur Web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📥 Git Pull WEB": {
+      "main": [
+        [
+          {
+            "node": "📖 Lire latest.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire données release": {
+      "main": [
+        [
+          {
+            "node": "📥 Git Pull WEB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer releases stables uniquement": {
+      "main": [
+        [
+          {
+            "node": "Extraire données release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Release Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Filtrer releases stables uniquement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "GitHub Release Trigger1": [
+      {
+        "body": {
+          "ref": "refs/heads/main",
+          "before": "801c8ccdb0ccb5149d677819c8eea6b39550b33d",
+          "after": "6c4c07b008c107e5b2603b4d0d3a9d51391ecfee",
+          "repository": {
+            "id": 1140194393,
+            "node_id": "R_kgDOQ_X8WQ",
+            "name": "WEB",
+            "full_name": "Jardineo-EIP-EpitechNIce/WEB",
+            "private": false,
+            "owner": {
+              "name": "Jardineo-EIP-EpitechNIce",
+              "email": "jardineoeip@gmail.com",
+              "login": "Jardineo-EIP-EpitechNIce",
+              "id": 202084350,
+              "node_id": "O_kgDODAuP_g",
+              "avatar_url": "https://avatars.githubusercontent.com/u/202084350?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce",
+              "html_url": "https://github.com/Jardineo-EIP-EpitechNIce",
+              "followers_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/followers",
+              "following_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/subscriptions",
+              "organizations_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/orgs",
+              "repos_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/repos",
+              "events_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Jardineo-EIP-EpitechNIce/received_events",
+              "type": "Organization",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "html_url": "https://github.com/Jardineo-EIP-EpitechNIce/WEB",
+            "description": null,
+            "fork": false,
+            "url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB",
+            "forks_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/forks",
+            "keys_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/keys{/key_id}",
+            "collaborators_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/collaborators{/collaborator}",
+            "teams_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/teams",
+            "hooks_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/hooks",
+            "issue_events_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/issues/events{/number}",
+            "events_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/events",
+            "assignees_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/assignees{/user}",
+            "branches_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/branches{/branch}",
+            "tags_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/tags",
+            "blobs_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/git/blobs{/sha}",
+            "git_tags_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/git/tags{/sha}",
+            "git_refs_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/git/refs{/sha}",
+            "trees_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/git/trees{/sha}",
+            "statuses_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/statuses/{sha}",
+            "languages_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/languages",
+            "stargazers_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/stargazers",
+            "contributors_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/contributors",
+            "subscribers_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/subscribers",
+            "subscription_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/subscription",
+            "commits_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/commits{/sha}",
+            "git_commits_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/git/commits{/sha}",
+            "comments_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/comments{/number}",
+            "issue_comment_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/issues/comments{/number}",
+            "contents_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/contents/{+path}",
+            "compare_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/compare/{base}...{head}",
+            "merges_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/merges",
+            "archive_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/{archive_format}{/ref}",
+            "downloads_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/downloads",
+            "issues_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/issues{/number}",
+            "pulls_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/pulls{/number}",
+            "milestones_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/milestones{/number}",
+            "notifications_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/notifications{?since,all,participating}",
+            "labels_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/labels{/name}",
+            "releases_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/releases{/id}",
+            "deployments_url": "https://api.github.com/repos/Jardineo-EIP-EpitechNIce/WEB/deployments",
+            "created_at": 1769127829,
+            "updated_at": "2026-01-24T02:09:57Z",
+            "pushed_at": 1769220987,
+            "git_url": "git://github.com/Jardineo-EIP-EpitechNIce/WEB.git",
+            "ssh_url": "git@github.com:Jardineo-EIP-EpitechNIce/WEB.git",
+            "clone_url": "https://github.com/Jardineo-EIP-EpitechNIce/WEB.git",
+            "svn_url": "https://github.com/Jardineo-EIP-EpitechNIce/WEB",
+            "homepage": null,
+            "size": 221,
+            "stargazers_count": 0,
+            "watchers_count": 0,
+            "language": "TypeScript",
+            "has_issues": true,
+            "has_projects": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "has_pages": false,
+            "has_discussions": false,
+            "forks_count": 0,
+            "mirror_url": null,
+            "archived": false,
+            "disabled": false,
+            "open_issues_count": 0,
+            "license": null,
+            "allow_forking": true,
+            "is_template": false,
+            "web_commit_signoff_required": false,
+            "topics": [],
+            "visibility": "public",
+            "forks": 0,
+            "open_issues": 0,
+            "watchers": 0,
+            "default_branch": "main",
+            "stargazers": 0,
+            "master_branch": "main",
+            "organization": "Jardineo-EIP-EpitechNIce",
+            "custom_properties": {}
+          },
+          "pusher": {
+            "name": "FrcJules",
+            "email": "114910682+FrcJules@users.noreply.github.com"
+          },
+          "organization": {
+            "login": "Jardineo-EIP-EpitechNIce",
+            "id": 202084350,
+            "node_id": "O_kgDODAuP_g",
+            "url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce",
+            "repos_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/repos",
+            "events_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/events",
+            "hooks_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/hooks",
+            "issues_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/issues",
+            "members_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/members{/member}",
+            "public_members_url": "https://api.github.com/orgs/Jardineo-EIP-EpitechNIce/public_members{/member}",
+            "avatar_url": "https://avatars.githubusercontent.com/u/202084350?v=4",
+            "description": ""
+          },
+          "sender": {
+            "login": "FrcJules",
+            "id": 114910682,
+            "node_id": "U_kgDOBtll2g",
+            "avatar_url": "https://avatars.githubusercontent.com/u/114910682?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/FrcJules",
+            "html_url": "https://github.com/FrcJules",
+            "followers_url": "https://api.github.com/users/FrcJules/followers",
+            "following_url": "https://api.github.com/users/FrcJules/following{/other_user}",
+            "gists_url": "https://api.github.com/users/FrcJules/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/FrcJules/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/FrcJules/subscriptions",
+            "organizations_url": "https://api.github.com/users/FrcJules/orgs",
+            "repos_url": "https://api.github.com/users/FrcJules/repos",
+            "events_url": "https://api.github.com/users/FrcJules/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/FrcJules/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "created": false,
+          "deleted": false,
+          "forced": false,
+          "base_ref": null,
+          "compare": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/compare/801c8ccdb0cc...6c4c07b008c1",
+          "commits": [
+            {
+              "id": "6c4c07b008c107e5b2603b4d0d3a9d51391ecfee",
+              "tree_id": "87fb8497c42f8a9c6343bef7ef77a0c7940fe033",
+              "distinct": true,
+              "message": "Update version and file name in latest.json",
+              "timestamp": "2026-01-24T02:16:27Z",
+              "url": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/commit/6c4c07b008c107e5b2603b4d0d3a9d51391ecfee",
+              "author": {
+                "name": "Frcjules",
+                "email": "114910682+FrcJules@users.noreply.github.com",
+                "date": "2026-01-24T02:16:27Z",
+                "username": "FrcJules"
+              },
+              "committer": {
+                "name": "GitHub",
+                "email": "noreply@github.com",
+                "date": "2026-01-24T02:16:27Z",
+                "username": "web-flow"
+              },
+              "added": [],
+              "removed": [],
+              "modified": [
+                "public/apk/latest.json"
+              ]
+            }
+          ],
+          "head_commit": {
+            "id": "6c4c07b008c107e5b2603b4d0d3a9d51391ecfee",
+            "tree_id": "87fb8497c42f8a9c6343bef7ef77a0c7940fe033",
+            "distinct": true,
+            "message": "Update version and file name in latest.json",
+            "timestamp": "2026-01-24T02:16:27Z",
+            "url": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/commit/6c4c07b008c107e5b2603b4d0d3a9d51391ecfee",
+            "author": {
+              "name": "Frcjules",
+              "email": "114910682+FrcJules@users.noreply.github.com",
+              "date": "2026-01-24T02:16:27Z",
+              "username": "FrcJules"
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "date": "2026-01-24T02:16:27Z",
+              "username": "web-flow"
+            },
+            "added": [],
+            "removed": [],
+            "modified": [
+              "public/apk/latest.json"
+            ]
+          }
+        },
+        "headers": {
+          "host": "n8n.jules-francois.fr",
+          "user-agent": "GitHub-Hookshot/4e88674",
+          "content-length": "8968",
+          "accept": "*/*",
+          "content-type": "application/json",
+          "x-forwarded-for": "140.82.115.79",
+          "x-forwarded-host": "n8n.jules-francois.fr",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "d3a2e95786b1",
+          "x-github-delivery": "b0b00188-f8ca-11f0-8f79-775e431a2cde",
+          "x-github-event": "push",
+          "x-github-hook-id": "593098848",
+          "x-github-hook-installation-target-id": "1140194393",
+          "x-github-hook-installation-target-type": "repository",
+          "x-real-ip": "140.82.115.79",
+          "accept-encoding": "gzip"
+        },
+        "query": {}
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6d96da13e0d94e79dc0f068d253910f168a3e9f666e2b3e4b731fee137278bf9"
+  }
+}

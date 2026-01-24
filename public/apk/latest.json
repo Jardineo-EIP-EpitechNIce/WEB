@@ -1,16 +1,18 @@
 {
-  "version": "1.2.0",
-  "file": "Jardineo-v1.2.0.apk",
+  "version": "1.0",
+  "file": "Jardineo-v1.0.apk",
   "releaseDate": "2026-01-24",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.2.0/Jardineo-v1.2.0.apk",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.0/Jardineo-v1.0.apk",
   "changelog": [
-    "**Backend**: v1.2.0",
-    "**Frontend Mobile**: v1.2.0",
+    "**Backend**: v1.0",
+    "**Frontend Mobile**: v1.0",
     "**Database**: v1.0",
-    "Amélioration synchronisation automatique",
-    "Correction URL téléchargement APK",
-    "Volume Docker pour latest.json dynamique",
-    "Backend stable",
-    "Scripts de population MongoDB"
+    "chore: update Back to v1.0 (stable release) (GitHub Actions Bot)",
+    "chore: update TestFlight URL to use environment variable (frcjules)",
+    "chore: update WEB submodule (rename WEB_PORT to PORT) (frcjules)",
+    "chore: update WEB submodule (fix default port to 3001) (frcjules)",
+    "chore: update WEB submodule (fix NODE_ENV) (frcjules)",
+    "chore: update WEB submodule (removed dev docs) (frcjules)",
+    "chore: update WEB submodule (removed workflow.json) (frcjules)"
   ]
 }

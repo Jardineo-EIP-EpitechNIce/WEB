@@ -10,7 +10,7 @@ services:
         NODE_ENV: production
     container_name: jardineo-web
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - "${WEB_PORT:-3001}:3000"
     environment:
       - TESTFLIGHT_CODE=${TESTFLIGHT_CODE}
       - NODE_ENV=${NODE_ENV:-production}

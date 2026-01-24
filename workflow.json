@@ -2,180 +2,6 @@
   "nodes": [
     {
       "parameters": {
-        "owner": {
-          "__rl": true,
-          "value": "Jardineo-EIP-EpitechNIce",
-          "mode": "name"
-        },
-        "repository": {
-          "__rl": true,
-          "value": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_",
-          "mode": "url"
-        },
-        "events": [
-          "release"
-        ],
-        "options": {}
-      },
-      "id": "77d3ec83-3a31-409f-9ce2-e6f9a93791df",
-      "name": "GitHub Release Trigger",
-      "type": "n8n-nodes-base.githubTrigger",
-      "typeVersion": 1,
-      "position": [
-        -4320,
-        -1856
-      ],
-      "webhookId": "jardineo-release-sync",
-      "credentials": {
-        "githubApi": {
-          "id": "hzcN0gQ2n6A80jln",
-          "name": "Jardineo"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{ $json.body.action }}",
-              "value2": "=created"
-            },
-            {
-              "value1": "={{ $json.body.release.prerelease }}",
-              "operation": "notEqual",
-              "value2": "true"
-            }
-          ]
-        }
-      },
-      "id": "717f5982-1c23-48b1-a24b-4982288cc868",
-      "name": "Filtrer releases stables uniquement",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        -4096,
-        -1856
-      ]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "version",
-              "value": "={{ $json.body.release.tag_name }}",
-              "type": "string",
-              "id": "711125f9-8d9d-4675-93c7-d754ba6f005c"
-            },
-            {
-              "name": "version_number",
-              "value": "={{ $json.body.release.tag_name.replace('v', '') }}",
-              "type": "string",
-              "id": "2003f99b-cccf-4529-b58e-94893aa2717c"
-            },
-            {
-              "name": "apk_url",
-              "value": "=https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/{{ $json.body.release.tag_name }}/app-release.apk",
-              "type": "string",
-              "id": "564a832f-ae2d-4076-9104-4c9107dd1a25"
-            },
-            {
-              "name": "release_notes",
-              "value": "={{ $json.body.release.body }}",
-              "type": "string",
-              "id": "90f8d0b6-9976-45d2-ad27-df14c6776744"
-            },
-            {
-              "name": "server_web_dir",
-              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB",
-              "type": "string",
-              "id": "ac12433d-96f9-42ec-8025-b3e32f13274e"
-            },
-            {
-              "name": "server_apk_dir",
-              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB/public/apk",
-              "type": "string",
-              "id": "afcfa32c-8d95-4699-bbc7-e76a8105fabd"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "93d31e7c-7edc-45dc-924d-81d51c6e304f",
-      "name": "Extraire données release",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -3888,
-        -1856
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "privateKey",
-        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $json.server_web_dir }}\"\n\necho \"🔄 Pull du repo WEB pour récupérer latest.json...\"\n\ncd \"$WEB_DIR\"\ngit fetch origin\ngit pull origin main\n\necho \"✅ Repo WEB mis à jour\"\necho \"📋 latest.json actuel:\"\n\nif [ -f \"public/apk/latest.json\" ]; then\n  cat public/apk/latest.json\nelse\n  echo \"⚠️ public/apk/latest.json introuvable\"\nfi",
-        "cwd": "={{ $json.server_web_dir }}"
-      },
-      "id": "f3d95067-6aae-49b8-9413-320f944e7c8d",
-      "name": "📥 Git Pull WEB",
-      "type": "n8n-nodes-base.ssh",
-      "typeVersion": 1,
-      "position": [
-        -3664,
-        -1856
-      ],
-      "credentials": {
-        "sshPrivateKey": {
-          "id": "5sD2r7LvTodDqdSg",
-          "name": "SSH Portainer"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "privateKey",
-        "command": "=#!/bin/bash\nset -euo pipefail\n\nAPK_URL=\"{{ $('Extraire données release').item.json.apk_url }}\"\nVERSION=\"{{ $('Extraire données release').item.json.version_number }}\"\nAPK_DIR=\"{{ $('Extraire données release').item.json.server_apk_dir }}\"\n\necho \"📥 Téléchargement de l'APK depuis GitHub Releases...\"\necho \"   URL: $APK_URL\"\necho \"   Destination: $APK_DIR/${VERSION}.apk\"\necho \"\"\n\nmkdir -p \"$APK_DIR\"\n\n# Télécharger l'APK avec curl\ncurl -L \"$APK_URL\" \\\n  -o \"$APK_DIR/${VERSION}.apk\" \\\n  --progress-bar \\\n  -H \"Accept: application/octet-stream\"\n\nif [ $? -eq 0 ]; then\n  APK_SIZE=$(du -h \"$APK_DIR/${VERSION}.apk\" | cut -f1)\n  echo \"\"\n  echo \"✅ APK téléchargé avec succès!\"\n  echo \"📦 Taille: $APK_SIZE\"\n  echo \"📍 Fichier: $APK_DIR/${VERSION}.apk\"\n\n  # Vérifier que latest.json existe (sans jq)\n  if [ -f \"$APK_DIR/latest.json\" ]; then\n    echo \"✅ latest.json trouvé :\"\n    cat \"$APK_DIR/latest.json\"\n  else\n    echo \"⚠️ latest.json introuvable (sera créé par GitHub Actions)\"\n  fi\nelse\n  echo \"❌ Échec du téléchargement de l'APK\"\n  exit 1\nfi",
-        "cwd": "={{ $('Extraire données release').item.json.server_web_dir }}"
-      },
-      "id": "29afe3aa-b8a0-4bca-8521-c52769e29783",
-      "name": "📦 Télécharger APK sur serveur",
-      "type": "n8n-nodes-base.ssh",
-      "typeVersion": 1,
-      "position": [
-        -3440,
-        -1856
-      ],
-      "credentials": {
-        "sshPrivateKey": {
-          "id": "5sD2r7LvTodDqdSg",
-          "name": "SSH Portainer"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "privateKey",
-        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $('Extraire données release').item.json.server_web_dir }}\"\nVERSION=\"{{ $('Extraire données release').item.json.version }}\"\n\necho \"🔄 Rechargement du serveur Web...\"\n\ncd \"$WEB_DIR\"\n\nif [ -f \"docker-compose.yml\" ]; then\n  echo \"🐳 Redémarrage du container Docker...\"\n  docker compose restart jardineo-web\n\n  echo \"⏳ Attente du démarrage...\"\n  sleep 5\n\n  # Récupérer le healthcheck sans --format\n  HEALTH=$(docker inspect jardineo-web 2>/dev/null \\\n    | grep '\"Status\"' \\\n    | head -n 1 \\\n    | sed 's/.*\"Status\": \"\\(.*\\)\".*/\\1/')\n\n  HEALTH=${HEALTH:-unknown}\n  echo \"🏥 Healthcheck: $HEALTH\"\n\n  if [ \"$HEALTH\" = \"healthy\" ] || [ \"$HEALTH\" = \"unknown\" ]; then\n    echo \"✅ Serveur web redémarré avec succès!\"\n  else\n    echo \"⚠️ Le container a redémarré mais le healthcheck n'est pas encore OK\"\n  fi\nelse\n  echo \"⚠️ docker-compose.yml introuvable, pas de redémarrage possible\"\nfi\n\necho \"\"\necho \"🎉 Synchronisation Web terminée pour $VERSION!\"\necho \"📍 Portail: http://192.168.1.127:3000\"\n",
-        "cwd": "={{ $('Extraire données release').item.json.server_web_dir }}"
-      },
-      "id": "e97fc6dd-a587-47e6-858d-8250cf85c715",
-      "name": "🔄 Redémarrer serveur Web",
-      "type": "n8n-nodes-base.ssh",
-      "typeVersion": 1,
-      "position": [
-        -3216,
-        -1856
-      ],
-      "credentials": {
-        "sshPrivateKey": {
-          "id": "5sD2r7LvTodDqdSg",
-          "name": "SSH Portainer"
-        }
-      }
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
@@ -202,77 +28,251 @@
         },
         "options": {}
       },
-      "id": "85494316-25c9-44d3-a113-e43c074c4411",
-      "name": "✅ Succès",
+      "id": "ec1b422f-70e7-4ee2-859a-dab0bf609a7b",
+      "name": "✅ Succès1",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3008,
-        -1856
+        -3056,
+        -1696
       ]
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $('Extraire données release1').item.json.server_web_dir }}\"\nVERSION=\"{{ $('Extraire données release1').item.json.version }}\"\n\necho \"🔄 Rechargement du serveur Web...\"\n\ncd \"$WEB_DIR\"\n\nif [ -f \"docker-compose.yml\" ]; then\n  echo \"🐳 Redémarrage du container Docker...\"\n  docker compose restart jardineo-web\n\n  echo \"⏳ Attente du démarrage...\"\n  sleep 5\n\n  # Récupérer le healthcheck sans --format\n  HEALTH=$(docker inspect jardineo-web 2>/dev/null \\\n    | grep '\"Status\"' \\\n    | head -n 1 \\\n    | sed 's/.*\"Status\": \"\\(.*\\)\".*/\\1/')\n\n  HEALTH=${HEALTH:-unknown}\n  echo \"🏥 Healthcheck: $HEALTH\"\n\n  if [ \"$HEALTH\" = \"healthy\" ] || [ \"$HEALTH\" = \"unknown\" ]; then\n    echo \"✅ Serveur web redémarré avec succès!\"\n  else\n    echo \"⚠️ Le container a redémarré mais le healthcheck n'est pas encore OK\"\n  fi\nelse\n  echo \"⚠️ docker-compose.yml introuvable, pas de redémarrage possible\"\nfi\n\necho \"\"\necho \"🎉 Synchronisation Web terminée pour $VERSION!\"\necho \"📍 Portail: http://192.168.1.127:3000\"\n",
+        "cwd": "={{ $('Extraire données release1').item.json.server_web_dir }}"
+      },
+      "id": "e2fed0bc-9dda-4efa-b1a9-94683b27e9e7",
+      "name": "🔄 Redémarrer serveur Web1",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3264,
+        -1696
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nAPK_URL=\"{{ $('Extraire données release1').item.json.apk_url }}\"\nVERSION=\"{{ $('Extraire données release1').item.json.version_number }}\"\nAPK_DIR=\"{{ $('Extraire données release1').item.json.server_apk_dir }}\"\n\necho \"📥 Téléchargement de l'APK depuis GitHub Releases...\"\necho \"   URL: $APK_URL\"\necho \"   Destination: $APK_DIR/${VERSION}.apk\"\necho \"\"\n\nmkdir -p \"$APK_DIR\"\n\n# Télécharger l'APK avec curl\ncurl -L \"$APK_URL\" \\\n  -o \"$APK_DIR/${VERSION}.apk\" \\\n  --progress-bar \\\n  -H \"Accept: application/octet-stream\"\n\nif [ $? -eq 0 ]; then\n  APK_SIZE=$(du -h \"$APK_DIR/${VERSION}.apk\" | cut -f1)\n  echo \"\"\n  echo \"✅ APK téléchargé avec succès!\"\n  echo \"📦 Taille: $APK_SIZE\"\n  echo \"📍 Fichier: $APK_DIR/${VERSION}.apk\"\n\n  # Vérifier que latest.json existe (sans jq)\n  if [ -f \"$APK_DIR/latest.json\" ]; then\n    echo \"✅ latest.json trouvé :\"\n    cat \"$APK_DIR/latest.json\"\n  else\n    echo \"⚠️ latest.json introuvable (sera créé par GitHub Actions)\"\n  fi\nelse\n  echo \"❌ Échec du téléchargement de l'APK\"\n  exit 1\nfi",
+        "cwd": "={{ $('Extraire données release1').item.json.server_web_dir }}"
+      },
+      "id": "dd43f379-a3e2-4e47-aaf4-221d01736427",
+      "name": "📦 Télécharger APK sur serveur1",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3488,
+        -1696
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "command": "=#!/bin/bash\nset -euo pipefail\n\nWEB_DIR=\"{{ $json.server_web_dir }}\"\n\necho \"🔄 Pull du repo WEB pour récupérer latest.json...\"\n\ncd \"$WEB_DIR\"\ngit fetch origin\ngit pull origin main\n\necho \"✅ Repo WEB mis à jour\"\necho \"📋 latest.json actuel:\"\n\nif [ -f \"public/apk/latest.json\" ]; then\n  cat public/apk/latest.json\nelse\n  echo \"⚠️ public/apk/latest.json introuvable\"\nfi",
+        "cwd": "={{ $json.server_web_dir }}"
+      },
+      "id": "1ca8a267-9520-409f-b452-40f4a86412d6",
+      "name": "📥 Git Pull WEB1",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -3712,
+        -1696
+      ],
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "5sD2r7LvTodDqdSg",
+          "name": "SSH Portainer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "version",
+              "value": "={{ $json.body.release.tag_name }}",
+              "type": "string",
+              "id": "711125f9-8d9d-4675-93c7-d754ba6f005c"
+            },
+            {
+              "name": "version_number",
+              "value": "={{ $json.body.release.tag_name.replace('v', '') }}",
+              "type": "string",
+              "id": "2003f99b-cccf-4529-b58e-94893aa2717c"
+            },
+            {
+              "name": "apk_url",
+              "value": "=https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/{{ $json.body.release.tag_name }}/Jardineo-{{ $json.body.release.tag_name }}.apk",
+              "type": "string",
+              "id": "564a832f-ae2d-4076-9104-4c9107dd1a25"
+            },
+            {
+              "name": "release_notes",
+              "value": "={{ $json.body.release.body }}",
+              "type": "string",
+              "id": "90f8d0b6-9976-45d2-ad27-df14c6776744"
+            },
+            {
+              "name": "server_web_dir",
+              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB",
+              "type": "string",
+              "id": "ac12433d-96f9-42ec-8025-b3e32f13274e"
+            },
+            {
+              "name": "server_apk_dir",
+              "value": "/home/rateur42/jardineo/Jardineo_Prod/WEB/public/apk",
+              "type": "string",
+              "id": "afcfa32c-8d95-4699-bbc7-e76a8105fabd"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "15bc9ff7-e55d-4868-962a-ae27673df798",
+      "name": "Extraire données release1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3936,
+        -1696
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.action }}",
+              "value2": "=created"
+            },
+            {
+              "value1": "={{ $json.body.release.prerelease }}",
+              "operation": "notEqual",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "f575e5f7-840e-488d-bba8-3aa1070ac429",
+      "name": "Filtrer releases stables uniquement1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -4144,
+        -1696
+      ]
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "Jardineo-EIP-EpitechNIce",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_",
+          "mode": "url"
+        },
+        "events": [
+          "release"
+        ],
+        "options": {}
+      },
+      "id": "a9375619-fc0c-4343-8e45-8d21aa0edb6d",
+      "name": "GitHub Release Trigger1",
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4368,
+        -1696
+      ],
+      "webhookId": "jardineo-release-sync",
+      "credentials": {
+        "githubApi": {
+          "id": "hzcN0gQ2n6A80jln",
+          "name": "Jardineo"
+        }
+      }
     }
   ],
   "connections": {
-    "GitHub Release Trigger": {
+    "🔄 Redémarrer serveur Web1": {
       "main": [
         [
           {
-            "node": "Filtrer releases stables uniquement",
+            "node": "✅ Succès1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Filtrer releases stables uniquement": {
+    "📦 Télécharger APK sur serveur1": {
       "main": [
         [
           {
-            "node": "Extraire données release",
+            "node": "🔄 Redémarrer serveur Web1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extraire données release": {
+    "📥 Git Pull WEB1": {
       "main": [
         [
           {
-            "node": "📥 Git Pull WEB",
+            "node": "📦 Télécharger APK sur serveur1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "📥 Git Pull WEB": {
+    "Extraire données release1": {
       "main": [
         [
           {
-            "node": "📦 Télécharger APK sur serveur",
+            "node": "📥 Git Pull WEB1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "📦 Télécharger APK sur serveur": {
+    "Filtrer releases stables uniquement1": {
       "main": [
         [
           {
-            "node": "🔄 Redémarrer serveur Web",
+            "node": "Extraire données release1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "🔄 Redémarrer serveur Web": {
+    "GitHub Release Trigger1": {
       "main": [
         [
           {
-            "node": "✅ Succès",
+            "node": "Filtrer releases stables uniquement1",
             "type": "main",
             "index": 0
           }
@@ -281,7 +281,7 @@
     }
   },
   "pinData": {
-    "GitHub Release Trigger": [
+    "GitHub Release Trigger1": [
       {
         "body": {
           "action": "created",

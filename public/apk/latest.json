@@ -1,11 +1,13 @@
 {
-  "version": "1.0.0",
-  "file": "1.0.0.apk",
-  "releaseDate": "2026-01-22",
+  "version": "1.1.0",
+  "file": "1.1.0.apk",
+  "releaseDate": "2026-01-24",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.1.0/1.1.0.apk",
   "changelog": [
-    "Initial release",
-    "Garden plot management",
-    "Plant catalog with AR preview",
-    "Community feed"
+    "Synchronisation automatique des métadonnées vers le portail web",
+    "APK stocké uniquement sur GitHub Releases (pas de limite de taille)",
+    "GitHub Actions met à jour latest.json automatiquement",
+    "n8n récupère et déploie l'APK sur le serveur",
+    "Portail web lit les métadonnées depuis latest.json"
   ]
 }

@@ -12,5 +12,6 @@ export interface ApkVersion {
 export interface DownloadButtonProps {
   platform: 'android' | 'ios';
   version?: string;
+  file?: string;
   isPrimary?: boolean;
 }

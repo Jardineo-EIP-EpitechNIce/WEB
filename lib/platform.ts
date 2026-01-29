@@ -41,7 +41,7 @@ export function isMobile(): boolean {
 export function getPlatformDownloadUrl(platform: Platform, apkVersion?: string): string {
   switch (platform) {
     case 'android':
-      return apkVersion ? `/apk/${apkVersion}.apk` : '/apk/latest.json';
+      return apkVersion ? `/apk/Jardineo-v${apkVersion}.apk` : '/apk/latest.json';
     case 'ios':
       // Replace with your actual TestFlight public link
       return `https://testflight.apple.com/join/${process.env.TESTFLIGHT_CODE || 'TESTFLIGHT_CODE'}`;

@@ -13,7 +13,7 @@ export default function DownloadButton({ platform, version, file, isPrimary = fa
       window.location.href = `/apk/${file}`;
     } else {
       // Redirect to TestFlight for iOS
-      window.open(`https://testflight.apple.com/join/${process.env.TESTFLIGHT_CODE || `TESTFLIGHT_CODE`}`, '_blank');
+      window.open(`https://testflight.apple.com/join/${process.env.NEXT_PUBLIC_TESTFLIGHT_CODE ?? 'TESTFLIGHT_CODE'}`, '_blank');
     }
   };
 

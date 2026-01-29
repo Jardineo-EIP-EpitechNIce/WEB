@@ -26,26 +26,3 @@ export function detectPlatform(): Platform {
   // Default to desktop
   return 'desktop';
 }
-
-/**
- * Check if user is on mobile device (iOS or Android)
- */
-export function isMobile(): boolean {
-  const platform = detectPlatform();
-  return platform === 'android' || platform === 'ios';
-}
-
-/**
- * Get platform-specific download URL
- */
-export function getPlatformDownloadUrl(platform: Platform, apkVersion?: string): string {
-  switch (platform) {
-    case 'android':
-      return apkVersion ? `/apk/Jardineo-v${apkVersion}.apk` : '/apk/latest.json';
-    case 'ios':
-      // Replace with your actual TestFlight public link
-      return `https://testflight.apple.com/join/${process.env.TESTFLIGHT_CODE || 'TESTFLIGHT_CODE'}`;
-    default:
-      return '#';
-  }
-}

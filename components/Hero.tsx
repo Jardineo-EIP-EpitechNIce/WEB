@@ -68,6 +68,7 @@ export default function Hero() {
             <DownloadButton
               platform={primaryPlatform}
               version={primaryPlatform === 'android' ? apkData?.version : undefined}
+              file={apkData?.file}
               isPrimary
             />
             <DownloadButton

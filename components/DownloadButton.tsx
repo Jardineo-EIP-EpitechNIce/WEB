@@ -3,13 +3,14 @@
 import React from 'react';
 import { DownloadButtonProps } from '@/lib/types';
 
-export default function DownloadButton({ platform, version, isPrimary = false }: DownloadButtonProps) {
+export default function DownloadButton({ platform, version, file, isPrimary = false }: DownloadButtonProps) {
   const isAndroid = platform === 'android';
 
   const handleClick = () => {
-    if (isAndroid && version) {
+    console.log(isAndroid, "file:", file);
+    if (isAndroid && file) {
       // Direct download for Android
-      window.location.href = `/apk/${version}.apk`;
+      window.location.href = `/apk/${file}`;
     } else {
       // Redirect to TestFlight for iOS
       window.open(`https://testflight.apple.com/join/${process.env.TESTFLIGHT_CODE || `TESTFLIGHT_CODE`}`, '_blank');

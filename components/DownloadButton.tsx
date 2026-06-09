@@ -7,12 +7,9 @@ export default function DownloadButton({ platform, version, file, isPrimary = fa
   const isAndroid = platform === 'android';
 
   const handleClick = () => {
-    console.log(isAndroid, "file:", file);
     if (isAndroid && file) {
-      // Direct download for Android
       window.location.href = `/apk/${file}`;
     } else {
-      // Redirect to TestFlight for iOS
       window.open(`https://testflight.apple.com/join/${process.env.NEXT_PUBLIC_TESTFLIGHT_CODE ?? 'TESTFLIGHT_CODE'}`, '_blank');
     }
   };

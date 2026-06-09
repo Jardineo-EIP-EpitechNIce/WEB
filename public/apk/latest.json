@@ -4,15 +4,13 @@
   "releaseDate": "2026-01-24",
   "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.0/Jardineo-v1.0.apk",
   "changelog": [
-    "**Backend**: v1.0",
-    "**Frontend Mobile**: v1.0",
-    "**Database**: v1.0",
-    "chore: update Back to v1.0 (stable release) (GitHub Actions Bot)",
-    "chore: update TestFlight URL to use environment variable (frcjules)",
-    "chore: update WEB submodule (rename WEB_PORT to PORT) (frcjules)",
-    "chore: update WEB submodule (fix default port to 3001) (frcjules)",
-    "chore: update WEB submodule (fix NODE_ENV) (frcjules)",
-    "chore: update WEB submodule (removed dev docs) (frcjules)",
-    "chore: update WEB submodule (removed workflow.json) (frcjules)"
+    "Nouveau système graphique Jardineo sur toutes les pages",
+    "Gestion complète des cultures : ajout, modification, suppression de plantes",
+    "Visualisation en réalité augmentée (AR) des plantes dans votre jardin",
+    "Système de gamification complet : XP, missions et progression",
+    "Profil utilisateur avec statistiques et suivi de progression",
+    "Connexion via Google Sign-In",
+    "Recherche et catalogue de plantes avec images",
+    "Backend v1.0 · Frontend v1.0 · Database v1.0"
   ]
 }

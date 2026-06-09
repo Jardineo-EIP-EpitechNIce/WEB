@@ -68,12 +68,13 @@ export default function Hero() {
             <DownloadButton
               platform={primaryPlatform}
               version={primaryPlatform === 'android' ? apkData?.version : undefined}
-              file={apkData?.file}
+              downloadUrl={primaryPlatform === 'android' ? apkData?.downloadUrl : undefined}
               isPrimary
             />
             <DownloadButton
               platform={secondaryPlatform}
               version={secondaryPlatform === 'android' ? apkData?.version : undefined}
+              downloadUrl={secondaryPlatform === 'android' ? apkData?.downloadUrl : undefined}
             />
           </div>
         )}

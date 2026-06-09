@@ -3,12 +3,12 @@
 import React from 'react';
 import { DownloadButtonProps } from '@/lib/types';
 
-export default function DownloadButton({ platform, version, file, isPrimary = false }: DownloadButtonProps) {
+export default function DownloadButton({ platform, version, downloadUrl, isPrimary = false }: DownloadButtonProps) {
   const isAndroid = platform === 'android';
 
   const handleClick = () => {
-    if (isAndroid && file) {
-      window.location.href = `/apk/${file}`;
+    if (isAndroid && downloadUrl) {
+      window.location.href = downloadUrl;
     } else {
       window.open(`https://testflight.apple.com/join/${process.env.NEXT_PUBLIC_TESTFLIGHT_CODE ?? 'TESTFLIGHT_CODE'}`, '_blank');
     }

@@ -1,8 +1,8 @@
 {
-  "version": "1.0.7",
-  "file": "Jardineo-v1.0.7.apk",
+  "version": "1.0.3",
+  "file": "Jardineo-v1.0.3.apk",
   "releaseDate": "2026-06-18",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.0.7/Jardineo-v1.0.7.apk",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.0.3/Jardineo-v1.0.3.apk",
   "changelog": [
     "Nouveau système graphique Jardineo sur toutes les pages",
     "Gestion complète des cultures : ajout, modification, suppression de plantes",

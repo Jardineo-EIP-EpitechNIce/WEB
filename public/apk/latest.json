@@ -1,16 +1,16 @@
 {
-  "version": "1.0.7",
-  "file": "Jardineo-v1.0.7.apk",
+  "version": "1.1.0",
+  "file": "Jardineo-v1.1.0.apk",
   "releaseDate": "2026-06-18",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.0.7/Jardineo-v1.0.7.apk",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.1.0/Jardineo-v1.1.0.apk",
   "changelog": [
-    "Nouveau système graphique Jardineo sur toutes les pages",
-    "Gestion complète des cultures : ajout, modification, suppression de plantes",
-    "Visualisation en réalité augmentée (AR) des plantes dans votre jardin",
-    "Système de gamification complet : XP, missions et progression",
-    "Profil utilisateur avec statistiques et suivi de progression",
-    "Connexion via Google Sign-In",
-    "Recherche et catalogue de plantes avec images",
-    "Backend v1.0 · Frontend v1.0 · Database v1.0"
+    "AR dynamique : modèles 3D selon la plante",
+    "Gamification complète : XP, missions, badges, niveaux",
+    "Communauté avancée : amis, commentaires, modération",
+    "Notifications push Firebase",
+    "Analytics Firebase (écrans, plantes, AR)",
+    "Identification de plante via photo",
+    "Charte graphique Jardineo finalisée",
+    "Backend v1.2.0 · Frontend v1.1 · Database v3.0"
   ]
 }

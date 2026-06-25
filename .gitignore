@@ -43,5 +43,5 @@ yarn-error.log*
 .vscode/
 .idea/
 
-# Docker
-.dockerignore
+# n8n workflow exports (may contain secrets / infra details — never commit)
+workflow.json

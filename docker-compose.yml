@@ -8,9 +8,10 @@ services:
       dockerfile: Dockerfile
       args:
         NODE_ENV: production
+        NEXT_PUBLIC_TESTFLIGHT_CODE: ${NEXT_PUBLIC_TESTFLIGHT_CODE}
     container_name: jardineo-web
     ports:
-      - "${PORT:-3001}:3000"
+      - "${PORT:-3000}:3000"
     environment:
       - NEXT_PUBLIC_TESTFLIGHT_CODE=${NEXT_PUBLIC_TESTFLIGHT_CODE}
       - NODE_ENV=${NODE_ENV:-production}

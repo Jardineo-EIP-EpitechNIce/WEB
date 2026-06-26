@@ -1,18 +1,16 @@
 {
-  "version": "1.0",
-  "file": "Jardineo-v1.0.apk",
-  "releaseDate": "2026-01-24",
-  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/JARDINEO_/releases/download/v1.0/Jardineo-v1.0.apk",
+  "version": "1.0.0",
+  "file": "Jardineo-v1.0.0.apk",
+  "releaseDate": "2026-06-25",
+  "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.0.0/Jardineo-v1.0.0.apk",
   "changelog": [
-    "**Backend**: v1.0",
-    "**Frontend Mobile**: v1.0",
-    "**Database**: v1.0",
-    "chore: update Back to v1.0 (stable release) (GitHub Actions Bot)",
-    "chore: update TestFlight URL to use environment variable (frcjules)",
-    "chore: update WEB submodule (rename WEB_PORT to PORT) (frcjules)",
-    "chore: update WEB submodule (fix default port to 3001) (frcjules)",
-    "chore: update WEB submodule (fix NODE_ENV) (frcjules)",
-    "chore: update WEB submodule (removed dev docs) (frcjules)",
-    "chore: update WEB submodule (removed workflow.json) (frcjules)"
+    "AR dynamique : modèles 3D selon la plante",
+    "Gamification complète : XP, missions, badges, niveaux",
+    "Communauté avancée : amis, commentaires, modération",
+    "Notifications push Firebase",
+    "Analytics Firebase (écrans, plantes, AR)",
+    "Identification de plante via photo",
+    "Charte graphique Jardineo finalisée",
+    "Backend v1.2.0 · Frontend v1.1 · Database v3.0"
   ]
 }

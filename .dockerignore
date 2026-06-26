@@ -1,0 +1,29 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (reinstalled in image)
+node_modules
+
+# Build output
+.next
+out
+build
+
+# Environment / secrets — never ship into the build context
+.env
+.env*.local
+.env.development
+.env.production
+
+# n8n workflow exports (may contain secrets / infra details)
+workflow.json
+
+# Docs & tooling
+*.md
+.editorconfig
+.eslintrc.json
+.vscode
+.idea
+.DS_Store
+coverage

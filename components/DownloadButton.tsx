@@ -10,7 +10,7 @@ export default function DownloadButton({ platform, version, downloadUrl, isPrima
     if (isAndroid && downloadUrl) {
       window.location.href = downloadUrl;
     } else {
-      window.open(`https://testflight.apple.com/join/${process.env.NEXT_PUBLIC_TESTFLIGHT_CODE ?? 'TESTFLIGHT_CODE'}`, '_blank');
+      window.open(`https://testflight.apple.com/join/${process.env.NEXT_PUBLIC_TESTFLIGHT_CODE ?? 'TESTFLIGHT_CODE'}`, '_blank', 'noopener,noreferrer');
     }
   };
 

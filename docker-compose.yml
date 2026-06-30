@@ -19,8 +19,6 @@ services:
     restart: unless-stopped
     networks:
       - jardineo-network
-    volumes:
-      - ./public/apk:/app/public/apk
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
       interval: 30s

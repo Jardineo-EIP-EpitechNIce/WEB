@@ -274,3 +274,4 @@ Report issues in the main Jardineo repository or contact the team.
 
 Built with ❤️ for gardeners everywhere
 
+

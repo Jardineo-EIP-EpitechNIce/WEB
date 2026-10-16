@@ -76,17 +76,40 @@ const loadJson = (url) =>
     return res.json();
   });
 
-const androidReady = isIos
-  ? Promise.resolve(false)
-  : loadJson("/apk/latest.json")
-      .then((data) => {
-        if (!data.downloadUrl) return false;
-        androidBtn.href = data.downloadUrl;
-        if (data.version) androidVersion.textContent = `(v${data.version})`;
-        androidBtn.hidden = false;
-        return true;
-      })
-      .catch(() => false);
+const release = document.getElementById("release");
+
+const showRelease = (data) => {
+  if (!data.version) return;
+  document.getElementById("releaseVersion").textContent = `v${data.version}`;
+  const date = new Date(data.releaseDate);
+  const releaseDate = document.getElementById("releaseDate");
+  if (Number.isNaN(date.getTime())) {
+    releaseDate.parentElement.hidden = true;
+  } else {
+    releaseDate.dateTime = data.releaseDate;
+    releaseDate.textContent = date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  }
+  const list = document.getElementById("releaseList");
+  (data.changelog || []).forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    list.append(li);
+  });
+  if (!list.children.length) list.previousElementSibling.hidden = true;
+  release.hidden = false;
+};
+
+const apkData = loadJson("/apk/latest.json").catch(() => null);
+
+const androidReady = apkData.then((data) => {
+  if (!data) return false;
+  showRelease(data);
+  if (isIos || !data.downloadUrl) return false;
+  androidBtn.href = data.downloadUrl;
+  if (data.version) androidVersion.textContent = `(v${data.version})`;
+  androidBtn.hidden = false;
+  return true;
+});
 
 const iosReady = isAndroid
   ? Promise.resolve(false)

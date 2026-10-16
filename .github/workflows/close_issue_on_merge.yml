@@ -1,0 +1,84 @@
+name: Close related issue on merge
+
+on:
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  close_issue:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    env:
+      OFFICIAL_REPO_OWNER: EpitechPromo2027
+      OFFICIAL_REPO_NAME: G-EIP-600-NCE-6-1-eip-raphael.clenet
+
+    steps:
+      - name: Extract issue number from PR body
+        id: extract
+        # Le corps de la PR est une entrée non fiable : il passe par une variable d'environnement
+        # et jamais par une interpolation ${{ }} dans le script (sinon `, $() ou " y seraient exécutés).
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "Searching for 'Fixes #123' or 'Closes #123' in PR body..."
+
+          # Recherche du numéro d'issue dans la PR
+          issue_number=$(printf '%s' "$PR_BODY" | grep -Eo '(Fixes|Closes)[[:space:]]+#([0-9]+)' | grep -Eo '[0-9]+' | head -n 1 || true)
+
+          if [ -n "$issue_number" ]; then
+            echo "Found issue reference: #$issue_number"
+            echo "ISSUE_NUMBER=$issue_number" >> "$GITHUB_ENV"
+          else
+            echo "No issue reference found in PR body"
+          fi
+
+      - name: Close issue in official repo
+        if: env.ISSUE_NUMBER != ''
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const owner = process.env.OFFICIAL_REPO_OWNER;
+            const repo = process.env.OFFICIAL_REPO_NAME;
+            const issueNumber = process.env.ISSUE_NUMBER;
+            const submodule = "${{ github.repository }}";
+            const prUrl = "${{ github.event.pull_request.html_url }}";
+            const issueUrl = `https://github.com/${owner}/${repo}/issues/${issueNumber}`;
+
+            console.log(`Closing issue ${owner}/${repo}#${issueNumber} (URL: ${issueUrl}) from ${submodule}...`);
+
+            try {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                state: "closed"
+              });
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body: `Automatically closed via PR merge in **${submodule}** ${prUrl}`
+              });
+              console.log("✅ Issue closed and comment added successfully.");
+            } catch (error) {
+              console.error("❌ Error closing issue:", error);
+              throw error;
+            }
+
+      - name: Delete branch after merge
+        if: github.event.pull_request.head.ref != 'main' && github.event.pull_request.head.ref != 'dev'
+        # Le nom de branche est une entrée non fiable (il peut contenir $, ( ou `) : variable
+        # d'environnement + liste blanche de caractères, jamais d'interpolation dans le script.
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          if ! printf '%s' "$HEAD_REF" | grep -Eq '^[A-Za-z0-9._/-]+$'; then
+            echo "Nom de branche inattendu, suppression ignorée"
+            exit 0
+          fi
+          # Ni checkout ni remote git dans ce job : on passe par l'API REST GitHub.
+          gh api -X DELETE "repos/${REPO}/git/refs/heads/${HEAD_REF}" || echo "Branch already deleted or protected"

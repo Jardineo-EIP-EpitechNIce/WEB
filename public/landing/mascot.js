@@ -1,18 +1,16 @@
 const lines = [
-  "Coucou ! Je ne fais pas que la feuille.",
-  "Chatouillez-moi encore, ça me fait pousser.",
-  "J'ai la sève qui monte quand on me touche.",
+  "Coucou ! Moi, c'est Jardi.",
   "Je n'ai pas la main verte, j'ai tout le corps.",
-  "Un petit verre d'eau ? Je ne dis jamais non.",
-  "On se roule dans l'herbe ? Pour jardiner, hein !",
-  "Ne me prenez pas pour une feuille de chou.",
+  "Un petit verre d'eau ? Avec plaisir !",
   "Bien arrosé, jamais fané.",
-  "Une bonne tige bien dressée, ça s'arrose.",
-  "Un petit bouturage ? Je dis pas non.",
-  "Faut pas pousser mémé dans les orties.",
+  "Une plante heureuse, c'est une plante qu'on n'oublie pas.",
+  "Vous avez pensé à arroser aujourd'hui ?",
   "Mes racines sont solides, mais j'ai le cœur tendre.",
   "Je suis un peu à l'ouest... du potager.",
-  "Toucher, c'est bien. Arroser, c'est mieux.",
+  "Un jardin, ça pousse un jour à la fois.",
+  "Pas de panique, on apprend tous en plantant.",
+  "Il paraît que je suis la plus belle feuille du site.",
+  "Allez, on va voir si le soleil est de la partie ?",
 ];
 let next = Math.floor(Math.random() * lines.length);
 let bubble = null;

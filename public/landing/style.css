@@ -220,7 +220,6 @@ em { font-style: normal; color: var(--green-text); }
 .step h3 { margin-bottom: 10px; }
 .step p { color: var(--muted); }
 .m-step { position: absolute; top: 12px; right: 16px; width: 76px; }
-.s-steps { text-align: center; margin-top: 44px; }
 
 .perks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .perk { padding: 28px 24px; border-radius: var(--radius); background: var(--cream-light); border: var(--stroke) solid var(--ink); box-shadow: var(--shadow-hard); }

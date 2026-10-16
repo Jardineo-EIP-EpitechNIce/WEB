@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://jardineo.eu"),
   title: "Jardineo - Gestion intelligente de jardin",
   description: "Téléchargez l'application mobile Jardineo pour iOS et Android. Gérez votre jardin intelligemment avec visualisation AR.",
   keywords: ["jardineo", "jardin", "plantes", "application mobile", "réalité augmentée"],

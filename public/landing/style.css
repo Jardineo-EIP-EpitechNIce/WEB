@@ -103,6 +103,8 @@ em { font-style: normal; color: var(--green-text); }
   background: var(--cream-light); border: var(--stroke) solid var(--ink); box-shadow: 4px 4px 0 var(--pop);
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.35rem; }
+.brand img { display: block; height: 30px; width: auto; }
+.footer .brand img { height: 24px; }
 .nav-links { display: flex; gap: 22px; font-weight: 500; font-size: .95rem; color: var(--muted); }
 .nav-links a:hover { color: var(--green-text); }
 

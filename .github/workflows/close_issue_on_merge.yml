@@ -37,7 +37,7 @@ jobs:
         if: env.ISSUE_NUMBER != ''
         uses: actions/github-script@v9
         with:
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ secrets.EPITECH_PAT }}
           script: |
             const owner = process.env.OFFICIAL_REPO_OWNER;
             const repo = process.env.OFFICIAL_REPO_NAME;
@@ -72,7 +72,7 @@ jobs:
         # Le nom de branche est une entrée non fiable (il peut contenir $, ( ou `) : variable
         # d'environnement + liste blanche de caractères, jamais d'interpolation dans le script.
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.EPITECH_PAT }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           REPO: ${{ github.repository }}
         run: |

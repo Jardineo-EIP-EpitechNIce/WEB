@@ -196,8 +196,11 @@ em { font-style: normal; color: var(--green-text); }
 .card:not(.big):not(.ar):not(.wide) { grid-column: span 3; }
 .card.big { grid-column: span 4; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; background: var(--soft); }
 .card.wide { grid-column: span 6; display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; background: var(--sky); }
-.card.ar { background: var(--dark); color: #e2f0e8; }
-.card.ar p:not(.tag) { color: #9ca3af; }
+.card.ar { background: var(--sky); }
+@media (prefers-color-scheme: dark) {
+  .card.ar { background: var(--dark); color: #e2f0e8; }
+  .card.ar p:not(.tag) { color: #9ca3af; }
+}
 .card.ar img { width: 150px; margin: -10px 0 0 -14px; }
 .icon-lg { width: 110px; margin: -6px 0 10px -8px; }
 .card-phone { width: 220px; justify-self: center; align-self: end; margin-bottom: -150px; filter: drop-shadow(6px 8px 0 rgba(20, 83, 45, .28)); }

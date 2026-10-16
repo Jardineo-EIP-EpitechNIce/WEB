@@ -285,6 +285,16 @@ em { font-style: normal; color: var(--green-text); }
 .m-final { width: 200px; margin-bottom: -4px; }
 .downloads { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
 .form-msg { min-height: 1.4em; font-size: .92rem; }
+.release { width: min(560px, 100%); margin-top: 14px; padding: 26px 28px 24px; text-align: left; border-radius: var(--radius); background: var(--cream-light); color: var(--text); border: var(--stroke) solid var(--dark); box-shadow: 6px 6px 0 var(--dark); transform: rotate(-.8deg); }
+.release .release-tag { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--mint); color: #0f1a13; border: 2px solid var(--dark); font: 600 .8rem "Fredoka", sans-serif; text-transform: uppercase; letter-spacing: .08em; }
+.release h3 { margin: 12px 0 2px; font-size: 1.5rem; color: var(--ink); }
+.release .release-date { font-size: .92rem; max-width: none; }
+.release h4 { margin: 18px 0 10px; font: 600 1.05rem "Fredoka", sans-serif; color: var(--text); }
+.release-list { display: grid; gap: 8px; font-size: .95rem; color: var(--muted); }
+.release-list li { position: relative; padding-left: 24px; }
+.release-list li::before { content: "✿"; position: absolute; left: 0; color: var(--green-text); }
+.final-inner .release p { color: var(--muted); max-width: none; }
+.final-inner .release p.release-tag { color: #0f1a13; }
 .stores { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
 .store { display: inline-flex; align-items: center; gap: 12px; padding: 10px 20px; border-radius: 16px; background: rgba(15, 26, 19, .6); border: 2px dashed #8ee4b7; font-weight: 600; text-align: left; line-height: 1.2; }
 .store small { display: block; font-weight: 400; font-size: .68rem; color: var(--mint); }

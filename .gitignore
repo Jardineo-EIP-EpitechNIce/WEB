@@ -45,3 +45,6 @@ yarn-error.log*
 
 # n8n workflow exports (may contain secrets / infra details — never commit)
 workflow.json
+
+# archives locales
+/archive/

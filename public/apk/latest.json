@@ -4,13 +4,12 @@
   "releaseDate": "2026-10-17",
   "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.4.3/Jardineo-v1.4.3.apk",
   "changelog": [
-    "AR dynamique : modèles 3D selon la plante",
-    "Gamification complète : XP, missions, badges, niveaux",
-    "Communauté avancée : amis, commentaires, modération",
-    "Notifications push Firebase",
-    "Analytics Firebase (écrans, plantes, AR)",
-    "Identification de plante via photo",
-    "Charte graphique Jardineo finalisée",
-    "Backend v1.2.0 · Frontend v1.1 · Database v3.0"
+    "Votre jardin en réalité augmentée : pointez votre téléphone sur le sol pour dessiner votre parcelle",
+    "Votre jardin apparaît en 3D, et vous le retrouvez à chaque visite",
+    "Un nouveau look pour toute l'application",
+    "De nouveaux défis à relever",
+    "Un nouveau visage qui vous accompagne un peu partout",
+    "Jardineo parle anglais : choisissez votre langue dans les paramètres",
+    "Et quelques petites surprises à dénicher…"
   ]
 }

@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  async redirects() {
+    return [
+      { source: '/privacy-policy', destination: '/confidentialite', permanent: true },
+    ];
+  },
   async rewrites() {
     return {
       beforeFiles: [

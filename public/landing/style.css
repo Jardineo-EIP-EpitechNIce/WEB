@@ -397,8 +397,6 @@ picture.shot::after {
 .legal .sub { margin-bottom: 8px; }
 .legal-list { display: grid; gap: 8px; padding-left: 20px; list-style: disc; }
 .legal strong { color: var(--text); font-weight: 600; }
-.todo { padding: 1px 8px; border-radius: 8px; border: 1px dashed var(--green-text); color: var(--green-text); font-weight: 600; font-size: .9em; }
-.todo-block { margin-top: 16px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

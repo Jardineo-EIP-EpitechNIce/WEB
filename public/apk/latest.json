@@ -4,12 +4,10 @@
   "releaseDate": "2026-10-17",
   "downloadUrl": "https://github.com/Jardineo-EIP-EpitechNIce/WEB/releases/download/v1.4.3/Jardineo-v1.4.3.apk",
   "changelog": [
-    "Jardin en réalité augmentée : parcourez votre parcelle avec son contour",
-    "Viseur pour placer facilement les coins de la parcelle",
-    "Jardin AR accessible depuis le détail de la parcelle",
-    "Application disponible en français et en anglais",
-    "Choix de la langue dans les paramètres",
-    "Erreurs réseau mieux signalées dans la communauté",
-    "La localisation n'est plus redemandée inutilement"
+    "Promenez-vous dans votre jardin en réalité augmentée",
+    "Tracez votre parcelle en visant simplement ses coins",
+    "Jardineo parle anglais : choisissez votre langue dans les paramètres",
+    "L'appli se souvient de votre ville et ne vous redemande plus votre position",
+    "Un message clair quand la connexion fait défaut"
   ]
 }

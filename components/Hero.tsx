@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Script from 'next/script';
 import { detectPlatform, Platform } from '@/lib/platform';
 import { ApkVersion } from '@/lib/types';
 import DownloadButton from './DownloadButton';
@@ -34,17 +33,6 @@ export default function Hero() {
 
   return (
     <>
-      <Script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TT6MWVH4" />
-      <Script
-        id="gtag-init"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-          `,
-        }}
-      />
       <section className="min-h-screen flex items-center justify-center px-4 py-16 bg-jardineo-surface">
       <div className="max-w-4xl w-full text-center">
         {/* Logo */}

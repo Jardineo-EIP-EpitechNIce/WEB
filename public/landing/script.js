@@ -99,6 +99,14 @@ const showRelease = (data) => {
   release.hidden = false;
 };
 
+// Suivi des clics de telechargement (envoye a GA4 via GTM, seulement si le visiteur a accepte les cookies).
+const trackDownload = (platform, version) => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: "download_app", platform, app_version: version || undefined });
+};
+androidBtn.addEventListener("click", () => trackDownload("android", androidVersion.textContent.replace(/[()v]/g, "")));
+iosBtn.addEventListener("click", () => trackDownload("ios"));
+
 const apkData = loadJson("/apk/latest.json").catch(() => null);
 
 const androidReady = apkData.then((data) => {

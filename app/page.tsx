@@ -14,6 +14,11 @@ export default function Home() {
           <p className="text-sm text-jardineo-mint">
             Un projet innovant Epitech (EIP)
           </p>
+          <p className="text-sm mt-2">
+            <a href="#" data-cookie-settings className="underline">
+              Gérer mes cookies
+            </a>
+          </p>
         </div>
       </footer>
     </main>

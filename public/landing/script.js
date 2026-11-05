@@ -66,6 +66,7 @@ const isIos = /iPad|iPhone|iPod/.test(ua);
 const isAndroid = /android/i.test(ua);
 
 const androidBtn = document.getElementById("dl-android");
+const apkLink = document.getElementById("dl-apk");
 const androidVersion = document.getElementById("dl-android-version");
 const iosBtn = document.getElementById("dl-ios");
 const dlMsg = document.getElementById("dlMsg");
@@ -99,15 +100,27 @@ const showRelease = (data) => {
   release.hidden = false;
 };
 
+// Suivi des clics de telechargement (envoye a GA4 via GTM, seulement si le visiteur a accepte les cookies).
+const trackDownload = (platform, source, version) => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: "download_app", platform, source: source || undefined, app_version: version || undefined });
+};
+androidBtn.addEventListener("click", () => trackDownload("android", "play"));
+apkLink.addEventListener("click", () => trackDownload("android", "apk", androidVersion.textContent.replace(/[()v]/g, "")));
+iosBtn.addEventListener("click", () => trackDownload("ios", "testflight"));
+
 const apkData = loadJson("/apk/latest.json").catch(() => null);
 
+// Android : lien d'inscription au test Google Play (dans le HTML) ; l'APK reste en secours.
 const androidReady = apkData.then((data) => {
-  if (!data) return false;
-  showRelease(data);
-  if (isIos || !data.downloadUrl) return false;
-  androidBtn.href = data.downloadUrl;
-  if (data.version) androidVersion.textContent = `(v${data.version})`;
+  if (data) showRelease(data);
+  if (isIos) return false;
   androidBtn.hidden = false;
+  if (data && data.downloadUrl) {
+    apkLink.href = data.downloadUrl;
+    if (data.version) androidVersion.textContent = `(v${data.version})`;
+    apkLink.hidden = false;
+  }
   return true;
 });
 

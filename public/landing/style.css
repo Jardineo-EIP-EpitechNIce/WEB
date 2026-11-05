@@ -296,6 +296,9 @@ em { font-style: normal; color: var(--green-text); }
 .final-inner p { color: #e6f8ee; max-width: 480px; }
 .m-final { width: 200px; margin-bottom: -4px; }
 .downloads { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+.dl-alt { text-align: center; margin-top: 10px; font-size: .92rem; color: var(--muted); }
+.dl-alt a { text-decoration: underline; }
+.dl-alt a:hover { color: var(--green-text); }
 .form-msg { min-height: 1.4em; font-size: .92rem; }
 .release { width: min(560px, 100%); margin-top: 14px; padding: 26px 28px 24px; text-align: left; border-radius: var(--radius); background: var(--cream-light); color: var(--text); border: var(--stroke) solid var(--dark); box-shadow: 6px 6px 0 var(--dark); transform: rotate(-.8deg); }
 .release .release-tag { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--mint); color: #0f1a13; border: 2px solid var(--dark); font: 600 .8rem "Fredoka", sans-serif; text-transform: uppercase; letter-spacing: .08em; }

@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         { source: '/', destination: '/landing/index.html' },
         { source: '/mentions-legales', destination: '/landing/mentions-legales.html' },
         { source: '/confidentialite', destination: '/landing/confidentialite.html' },
+        { source: '/tests', destination: '/landing/tests.html' },
       ],
     };
   },

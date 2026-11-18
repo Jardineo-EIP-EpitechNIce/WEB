@@ -8,6 +8,12 @@ on:
   pull_request:
     branches: [dev, main]
 
+# Annule les runs de PR périmés (nouveau push sur la même branche). Les push ne sont jamais
+# annulés (ils peuvent déployer). Voir #488.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     name: Lint & Build

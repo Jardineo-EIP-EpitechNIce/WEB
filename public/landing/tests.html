@@ -15,15 +15,27 @@
 <link rel="stylesheet" href="/landing/style.css">
 <script src="/consent.js" defer></script>
 <style>
-  .tests-cards { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 56px auto 0; max-width: 640px; }
-  .tests-cards > .card:not(.big):not(.ar):not(.wide) { grid-column: auto; display: flex; flex-direction: column; align-items: flex-start; }
-  .tests-cards .card .btn { margin-top: auto; align-self: flex-start; }
-  .tests-cards .card p { margin-bottom: 18px; }
+  .tests-cards { margin: 56px auto 0; max-width: 640px; }
+  .tests-cards .card { display: block; transform: none; }
+  .tests-cards .card:hover { transform: none; box-shadow: var(--shadow-hard); }
   .tests-cards .card .mascot { width: 92px; height: auto; position: absolute; right: 18px; top: 18px; }
+  .tests-cards .card p { margin-bottom: 18px; }
+  .tests-cards .card .btn { margin-top: 4px; }
+  .os-switch { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 22px; background: var(--cream); border: var(--stroke) solid var(--ink); border-radius: 999px; }
+  .os-switch button { appearance: none; border: 0; background: transparent; color: var(--muted); font: 600 .95rem "Fredoka", sans-serif; padding: 8px 20px; border-radius: 999px; cursor: pointer; transition: background .15s ease, color .15s ease; }
+  .os-switch button:hover { color: var(--text); }
+  .os-switch button[aria-selected="true"] { background: var(--green-text); color: var(--on-green); }
+  .os-switch button:focus-visible, .tests-cards .btn:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
+  .os-panel[hidden] { display: none; }
+  .os-panel + .os-panel { margin-top: 28px; padding-top: 28px; border-top: 2px dashed var(--ink); }
+  .js .os-panel + .os-panel { margin-top: 0; padding-top: 0; border-top: 0; }
+  .os-switch { display: none; }
+  .js .os-switch { display: inline-flex; }
   .tests-note { text-align: center; margin-top: 40px; }
   .legal .steps li { color: var(--text); }
   .legal .steps li p { color: var(--muted); }
   @media (max-width: 520px) { .tests-cards .card .mascot { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .os-switch button { transition: none; } }
 </style>
 </head>
 <body>
@@ -42,19 +54,19 @@
     <div class="section-head">
       <span class="eyebrow">Tests utilisateurs</span>
       <h1>Testez. <em>Racontez-nous.</em></h1>
-      <p class="sub">Merci de nous aider ! Installez l'application Android de test, utilisez-la comme vous le feriez au quotidien, puis dites-nous ce que vous en pensez.</p>
+      <p class="sub">Merci de nous aider ! Installez l'application de test sur Android ou iPhone, utilisez-la comme vous le feriez au quotidien, puis dites-nous ce que vous en pensez.</p>
     </div>
 
     <ol class="steps">
       <li class="step">
         <span class="num">1</span>
         <h3>Rejoignez le test</h3>
-        <p>Ouvrez le lien ci-dessous sur votre téléphone Android, avec le compte Google que vous nous avez donné, puis appuyez sur « Devenir testeur ».</p>
+        <p>Choisissez votre téléphone ci-dessous. Sur Android, utilisez le compte Google que vous nous avez donné, puis appuyez sur « Devenir testeur ». Sur iPhone, l'invitation s'ouvre dans TestFlight.</p>
       </li>
       <li class="step">
         <span class="num">2</span>
         <h3>Installez l'appli</h3>
-        <p>Installez-la depuis le Play Store : elle s'appelle « Jardineo 1.3.3 » sur votre téléphone. Créez-y votre compte.</p>
+        <p>Installez-la depuis le Play Store (« Jardineo 1.3.3 ») ou depuis TestFlight sur iPhone. Créez-y votre compte.</p>
       </li>
       <li class="step">
         <span class="num">3</span>
@@ -64,16 +76,30 @@
     </ol>
 
     <div class="tests-cards">
-      <article class="card">
+      <article class="card" id="test-card">
         <img class="mascot" src="/landing/img/mascotte/telephone.png" alt="" width="260" height="313" loading="lazy">
-        <p class="tag">Version 1.3.3 (septembre 2026)</p>
-        <h3>Jardineo 1.3.3</h3>
-        <p>La version à tester, avec son propre compte et ses propres données de test.</p>
-        <a class="btn btn-primary" href="https://play.google.com/apps/internaltest/4701708102862091929" target="_blank" rel="noopener noreferrer">Rejoindre sur Google Play</a>
+        <div class="os-switch" role="tablist" aria-label="Choisissez votre téléphone">
+          <button type="button" role="tab" id="tab-android" aria-controls="panel-android" aria-selected="true">Android</button>
+          <button type="button" role="tab" id="tab-ios" aria-controls="panel-ios" aria-selected="false" tabindex="-1">iPhone</button>
+        </div>
+
+        <div class="os-panel" id="panel-android" role="tabpanel" aria-labelledby="tab-android">
+          <p class="tag">Android · Version 1.3.3 (septembre 2026)</p>
+          <h3>Jardineo 1.3.3</h3>
+          <p>La version à tester, avec son propre compte et ses propres données de test.</p>
+          <a class="btn btn-primary" href="https://play.google.com/apps/internaltest/4701708102862091929" target="_blank" rel="noopener noreferrer">Rejoindre sur Google Play</a>
+        </div>
+
+        <div class="os-panel" id="panel-ios" role="tabpanel" aria-labelledby="tab-ios">
+          <p class="tag">iPhone · TestFlight</p>
+          <h3>Jardineo sur iPhone</h3>
+          <p>Installez d'abord l'application gratuite TestFlight d'Apple, puis ouvrez l'invitation pour récupérer la version de test.</p>
+          <a class="btn btn-primary" href="https://testflight.apple.com/join/bhCcrSa5" target="_blank" rel="noopener noreferrer">Rejoindre sur TestFlight</a>
+        </div>
       </article>
     </div>
 
-    <p class="sub tests-note">Le lien affiche une erreur ? Votre compte Google n'est sans doute pas encore dans la liste des testeurs : écrivez-nous à <a class="link" href="mailto:jardineoeip@gmail.com">jardineoeip@gmail.com</a>.</p>
+    <p class="sub tests-note">Le lien Android affiche une erreur ? Votre compte Google n'est sans doute pas encore dans la liste des testeurs : écrivez-nous à <a class="link" href="mailto:jardineoeip@gmail.com">jardineoeip@gmail.com</a>.</p>
   </div>
 </main>
 
@@ -88,5 +114,33 @@
     <p class="muted">© 2026 Jardineo · Projet innovant Epitech (EIP)</p>
   </div>
 </footer>
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var tabs = [document.getElementById("tab-android"), document.getElementById("tab-ios")];
+  var panels = [document.getElementById("panel-android"), document.getElementById("panel-ios")];
+  var note = document.querySelector(".tests-note");
+  function select(i, focus) {
+    tabs.forEach(function (t, j) {
+      t.setAttribute("aria-selected", j === i ? "true" : "false");
+      t.tabIndex = j === i ? 0 : -1;
+      panels[j].hidden = j !== i;
+    });
+    if (note) note.hidden = i !== 0;
+    if (focus) tabs[i].focus();
+    try { localStorage.setItem("jardineo-test-os", i ? "ios" : "android"); } catch (e) {}
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { select(i); });
+    t.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); select(1 - i, true); }
+    });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem("jardineo-test-os"); } catch (e) {}
+  var iosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  select((saved ? saved === "ios" : iosDevice) ? 1 : 0);
+})();
+</script>
 </body>
 </html>

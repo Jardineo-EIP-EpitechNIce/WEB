@@ -1,0 +1,30 @@
+# Fins de ligne : LF partout dans le dépôt, quel que soit l'OS (macOS, Linux, Windows).
+# Sans ça, Git pour Windows convertit en CRLF et casse les scripts shell, les hooks
+# git/husky et les Dockerfile (« /usr/bin/env: 'bash\r': No such file or directory »).
+* text=auto eol=lf
+
+# Scripts Windows : CRLF obligatoire.
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Binaires : jamais de conversion ni de diff texte.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.ttf  binary
+*.otf  binary
+*.woff binary
+*.woff2 binary
+*.mp4  binary
+*.glb  binary
+*.usdz binary
+*.riv  binary
+*.jar  binary
+*.keystore binary
+*.jks  binary
